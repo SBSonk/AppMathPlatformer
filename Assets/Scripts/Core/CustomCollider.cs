@@ -6,41 +6,6 @@ using UnityEngine;
 
 namespace Core
 {
-    public enum CollisionLayer
-    {
-        Player,
-        Enemy,
-        Projectile,
-        Environment,
-        Pickup,
-        Ground,
-        Obstacle,
-        DeathZone,
-        FallCollider = DeathZone
-    }
-
-    [Flags]
-    public enum CollisionLayerMask
-    {
-        None = 0,
-        Player = 1 << 0,
-        Enemy = 1 << 1,
-        Projectile = 1 << 2,
-        Environment = 1 << 3,
-        Pickup = 1 << 4,
-        Ground = 1 << 5,
-        Obstacle = 1 << 6,
-        DeathZone = 1 << 7,
-        FallCollider = DeathZone,
-        All = ~0
-    }
-
-    public enum ColliderType
-    {
-        Sphere = 0,
-        Cube = 1
-    }
-
     public class CustomCollider : MonoBehaviour
     {
         public static List<CustomCollider>[] LayerGroups => CollisionHandler.LayerGroups;
@@ -62,9 +27,9 @@ namespace Core
         public event Action<CustomCollider> CollisionStay;
         public event Action<CustomCollider> CollisionExit;
 
-        private readonly HashSet<CustomCollider> _currentFrameCollisions = new HashSet<CustomCollider>();
-        private readonly HashSet<CustomCollider> _activeCollisions = new HashSet<CustomCollider>();
-        private readonly List<CustomCollider> _exitBuffer = new List<CustomCollider>();
+        readonly HashSet<CustomCollider> _currentFrameCollisions = new HashSet<CustomCollider>();
+        readonly HashSet<CustomCollider> _activeCollisions = new HashSet<CustomCollider>();
+        readonly List<CustomCollider> _exitBuffer = new List<CustomCollider>();
 
         public Vector3 Position => transform.position + offset;
 
@@ -191,8 +156,8 @@ namespace Core
 
             if (!aIsSphere && bIsSphere)
                 return CollisionHelper.BoxToSphere(a.Position, a.HalfSize, b.Position, b.radius);
-
-            return CollisionHelper.BoxToSphere(b.Position, b.HalfSize, a.Position, a.radius);
+            else
+                return CollisionHelper.BoxToSphere(b.Position, b.HalfSize, a.Position, a.radius);
         }
 
         public static List<CustomCollider> GetColliders(CollisionLayerMask mask)
@@ -200,7 +165,7 @@ namespace Core
             return CollisionHandler.GetColliders(mask);
         }
 
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
             Vector3 pos = Position;

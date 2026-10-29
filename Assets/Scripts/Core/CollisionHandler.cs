@@ -4,36 +4,43 @@ using UnityEngine;
 
 namespace Core
 {
+    public enum CollisionLayer
+    {
+        Player,
+        Enemy,
+        Projectile,
+        Environment,
+        Pickup,
+        Obstacle,
+        DeathZone,
+    }
+
+    [Flags]
+    public enum CollisionLayerMask
+    {
+        None = 0,
+        Player = 1 << 0,
+        Enemy = 1 << 1,
+        Projectile = 1 << 2,
+        Environment = 1 << 3,
+        Pickup = 1 << 4,
+        Obstacle = 1 << 5,
+        DeathZone = 1 << 6,
+        All = ~0
+    }
+
+    public enum ColliderType
+    {
+        Sphere = 0,
+        Cube = 1
+    }
+
     public class CollisionHandler : MonoBehaviour
     {
-        private static CollisionHandler _instance;
-        private static bool _isQuitting;
+        public static CollisionHandler Instance { get; set; }
 
-        public static CollisionHandler Instance
-        {
-            get
-            {
-                if (_instance == null && !_isQuitting)
-                {
-                    _instance = FindFirstObjectByType<CollisionHandler>();
-                    if (_instance == null)
-                    {
-                        GameObject go = new GameObject("[CollisionHandler]");
-                        _instance = go.AddComponent<CollisionHandler>();
-                    }
-                }
-                return _instance;
-            }
-        }
-
-        private static readonly List<CustomCollider> _allColliders = new List<CustomCollider>();
-        private static List<CustomCollider>[] _layerGroups;
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void Initialize()
-        {
-            EnsureLayerGroupsInitialized();
-        }
+        static readonly List<CustomCollider> AllColliders = new List<CustomCollider>();
+        static List<CustomCollider>[] _layerGroups;
 
         public static void EnsureLayerGroupsInitialized()
         {
@@ -62,9 +69,9 @@ namespace Core
             if (collider == null) return;
             EnsureLayerGroupsInitialized();
 
-            if (!_allColliders.Contains(collider))
+            if (!AllColliders.Contains(collider))
             {
-                _allColliders.Add(collider);
+                AllColliders.Add(collider);
             }
 
             int layerIndex = (int)collider.layer;
@@ -75,11 +82,6 @@ namespace Core
                     _layerGroups[layerIndex].Add(collider);
                 }
             }
-
-            if (Application.isPlaying)
-            {
-                var inst = Instance;
-            }
         }
 
         public static void Unregister(CustomCollider collider)
@@ -87,7 +89,7 @@ namespace Core
             if (collider == null) return;
             EnsureLayerGroupsInitialized();
 
-            _allColliders.Remove(collider);
+            AllColliders.Remove(collider);
 
             int layerIndex = (int)collider.layer;
             if (layerIndex >= 0 && layerIndex < _layerGroups.Length)
@@ -114,16 +116,16 @@ namespace Core
 
         public static List<CustomCollider> GetAllColliders()
         {
-            return _allColliders;
+            return AllColliders;
         }
 
-        private void Awake()
+        void Awake()
         {
-            if (_instance == null)
+            if (Instance == null)
             {
-                _instance = this;
+                Instance = this;
             }
-            else if (_instance != this)
+            else
             {
                 Destroy(gameObject);
                 return;
@@ -131,29 +133,19 @@ namespace Core
             EnsureLayerGroupsInitialized();
         }
 
-        private void OnApplicationQuit()
-        {
-            _isQuitting = true;
-        }
-
-        private void Update()
+        void Update()
         {
             PerformCollisionChecks();
         }
 
-        /// <summary>
-        /// Centrally evaluates collisions between all registered colliders.
-        /// Evaluates each unique pair at most once to eliminate redundant computations.
-        /// </summary>
         public static void PerformCollisionChecks()
         {
             EnsureLayerGroupsInitialized();
 
-            // Clear frame collisions for all active colliders
-            int count = _allColliders.Count;
+            int count = AllColliders.Count;
             for (int i = 0; i < count; i++)
             {
-                CustomCollider col = _allColliders[i];
+                CustomCollider col = AllColliders[i];
                 if (col != null)
                 {
                     col.BeginCollisionFrame();
@@ -163,12 +155,12 @@ namespace Core
             // Iterate over all unique pairs (i, j) with i < j
             for (int i = 0; i < count; i++)
             {
-                CustomCollider colA = _allColliders[i];
+                CustomCollider colA = AllColliders[i];
                 if (colA == null || !colA.isActiveAndEnabled) continue;
 
                 for (int j = i + 1; j < count; j++)
                 {
-                    CustomCollider colB = _allColliders[j];
+                    CustomCollider colB = AllColliders[j];
                     if (colB == null || !colB.isActiveAndEnabled) continue;
 
                     bool aChecksB = ((int)colA.layersToCheck & (1 << (int)colB.layer)) != 0;
@@ -191,10 +183,10 @@ namespace Core
                 }
             }
 
-            // Dispatch Stay and Exit events
+            // Trigger col events
             for (int i = 0; i < count; i++)
             {
-                CustomCollider col = _allColliders[i];
+                CustomCollider col = AllColliders[i];
                 if (col != null && col.isActiveAndEnabled)
                 {
                     col.EndCollisionFrame();

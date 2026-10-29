@@ -174,7 +174,6 @@ GameObject:
   - component: {fileID: 110000002}
   - component: {fileID: 110000003}
   - component: {fileID: 110000004}
-  - component: {fileID: 110000005}
   - component: {fileID: 110000006}
   - component: {fileID: 110000007}
   m_Layer: 0
@@ -256,24 +255,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &110000005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 110000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layer: 0
-  colliderType: 1
-  radius: 0.5
-  size: {x: 1, y: 1, z: 1}
-  offset: {x: 0, y: 0, z: 0}
-  layersToCheck: 224
 --- !u!114 &110000006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,12 +267,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a66db379af43d484da3b4e2935ad1377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer: 0
+  colliderType: 1
+  radius: 0.5
+  size: {x: 1, y: 1, z: 1}
+  offset: {x: 0, y: 0, z: 0}
+  layersToCheck: 40
   moveSpeed: 8
   jumpForce: 14
   gravity: 32
-  fallThreshold: -12
-  solidMask: 96
-  deathZoneMask: 128
 --- !u!114 &110000007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 5
+  layer: 3
   colliderType: 1
   radius: 0.5
   size: {x: 8, y: 1, z: 1}
@@ -534,7 +518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 5
+  layer: 3
   colliderType: 1
   radius: 0.5
   size: {x: 4, y: 1, z: 1}
@@ -643,7 +627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 5
+  layer: 3
   colliderType: 1
   radius: 0.5
   size: {x: 4, y: 1, z: 1}
@@ -752,7 +736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 5
+  layer: 3
   colliderType: 1
   radius: 0.5
   size: {x: 5, y: 1, z: 1}
@@ -861,7 +845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 6
+  layer: 5
   colliderType: 1
   radius: 0.5
   size: {x: 1, y: 1, z: 1}
@@ -970,7 +954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 6
+  layer: 5
   colliderType: 1
   radius: 0.5
   size: {x: 1, y: 1, z: 1}
@@ -1079,7 +1063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 6
+  layer: 5
   colliderType: 1
   radius: 0.5
   size: {x: 0.8, y: 3, z: 1}
@@ -1142,7 +1126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0cb64bcf729d49801fa194b451702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 7
+  layer: 6
   colliderType: 1
   radius: 0.5
   size: {x: 50, y: 2, z: 10}
